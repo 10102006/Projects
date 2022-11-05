@@ -2,8 +2,7 @@
 
 ## add_time that takes in two required parameters and one optional parameter:
 
-*https://docs.python.org/3/library/datetime.html*
-*https://www.w3schools.com/python/python_datetime.asp*
+*https://www.dataquest.io/blog/python-datetime-tutorial/*
 
 ### Params
 - a start time in the 12-hour clock format (ending in AM or PM)
