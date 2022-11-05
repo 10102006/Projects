@@ -1,0 +1,22 @@
+{
+	"folders": [
+		{
+			"name": "Projects",
+			"path": ".."
+		}
+	],
+	"settings": {
+		"cSpell.ignoreWords": [
+			"ZIRA"
+		],
+		"cSpell.enableFiletypes": [
+			"python"
+		],
+		"cSpell.words": [
+			"fernet",
+			"stdiomask",
+			"TOURISTPLACE"
+		],
+		"cSpell.enabled": false
+	}
+}

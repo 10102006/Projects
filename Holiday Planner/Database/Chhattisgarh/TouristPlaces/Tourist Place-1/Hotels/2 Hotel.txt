@@ -1,0 +1,2 @@
+2 Hotel has a good rating of 4
+2 Hotel's price of stay is 640/night

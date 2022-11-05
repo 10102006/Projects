@@ -1,0 +1,13 @@
+Definition:
+   Virtual environment is a tool that helps to keep dependencies required by different projects separate by creating isolated python virtual environment for them.
+
+Implementation:
+   1. To create a virtual env use the following command:
+      @ python -m venv ./venv
+   2. To activate venv
+      @ .\venv\Scripts\activate
+   4. To deactivate venv
+      @ deactivate
+
+*** Option  ***
+   1. Instead of venv we can give our virtualenv any name, but activating that name will be required

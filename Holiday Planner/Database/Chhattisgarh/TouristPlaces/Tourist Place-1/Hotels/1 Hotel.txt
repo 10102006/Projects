@@ -1,0 +1,2 @@
+1 Hotel has a good rating of 2
+1 Hotel's price of stay is 320/night
