@@ -67,20 +67,96 @@ class Chart:
     def __init__(self, categories):
         """ So this functions makes a class a constructor """
         self.categories = categories
+        self.FindPercent()
+        self.View()
 
-    def FindPercent():
+    def FindPercent(self):
         """ Will find the percent based on ledger. """
-        pass
+        self.percentTable = {}
+        grandTotal = 0
+        for category in self.categories:
+            totalSpent = 0
+            for entry in category.ledger:
+                if entry['amount'] < 0:
+                    totalSpent -= entry['amount']
+                    grandTotal -= entry['amount']
+            self.percentTable.update({category.categoryName: totalSpent})
+
+        for val in self.percentTable:
+            self.percentTable[val] = int(round(
+                (self.percentTable[val]/grandTotal) * 10, 0))
+
+    def Graph(self):
+        """ """
+        keys = ['']
+        graph = []
+        for pi in range(11):
+            graph.append([' ' for _ in range(5)])
+
+        for ri, row in enumerate(graph):
+            for ci, pi in enumerate(self.percentTable.values(), start=1):
+                if 9-pi < ri:
+                    graph[ri][ci] = 'o'
+            graph[ri][0] = f"{(10-ri) * 10} |".rjust(5)
+
+        for key in self.percentTable.keys():
+            vl = ''
+            for char in key:
+                vl = vl + f"\n{char}"
+            keys.append(vl)
+
+        for row in graph:
+            print(*row)
+
+    def WordOrient(self):
+        """ """
+        keys = list(self.percentTable.keys())
+
+        longest = len(keys[0])
+        for key in keys:
+            if len(key) > longest:
+                longest = len((key))
+
+        tb = [['-' for _ in keys]]
+        for _ in range(longest):
+            tb.append(['' for _ in keys])
+
+        for ri, row in enumerate(tb):
+            for ci, key in enumerate(row):
+                try:
+                    char = keys[ci][ri]
+                except:
+                    pass
+                else:
+                    pass
+                    tb[ri+1][ci] = char
+
+        for i in tb:
+            print(' ' * 5, *i)
+
+    def View(self):
+        """ """
+        print("Percent Spent by Category")
+        self.Graph()
+        self.WordOrient()
 
 
 # ? Implementation
 if __name__ == "__main__":
     food = Category('food')
     cloth = Category('clotheS')
+    room = Category('ROOM')
     food.Deposit(1750, 'Initial Deposit')
-    food.Deposit(10, 'Chai ordered')
-    food.Withdraw(450, 'Pizza sauce bought')
-    food.Transfer(cloth, 700)
+    room.Deposit(2280, 'Initial Deposit')
+    cloth.Deposit(2510, 'Initial Deposit')
 
-    food.PrintData()
+    food.Withdraw(150, 'Pizza sauce bought')
+    room.Withdraw(450, 'Pizza sauce bought')
+    room.Withdraw(450, 'Pizza sauce bought')
+    cloth.Withdraw(520, 'Pizza sauce bought')
+    food.Transfer(cloth, 300)
+    cloth.Transfer(room, 100)
 
+    # food.PrintData()
+
+    chart = Chart([food, room, cloth])
