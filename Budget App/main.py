@@ -155,8 +155,17 @@ if __name__ == "__main__":
     room.Withdraw(450, 'Pizza sauce bought')
     cloth.Withdraw(520, 'Pizza sauce bought')
     food.Transfer(cloth, 300)
+    food.Transfer(cloth, 300)
+    food.Transfer(cloth, 300)
+    food.Transfer(cloth, 300)
+    food.Transfer(cloth, 300)
     cloth.Transfer(room, 100)
 
-    # food.PrintData()
+    food.PrintData()
+    print()
+    room.PrintData()
+    print()
+    cloth.PrintData()
+    print()
 
     chart = Chart([food, room, cloth])
