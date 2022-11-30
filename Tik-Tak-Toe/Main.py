@@ -15,104 +15,6 @@ import random
 # @ Defination
 
 
-def MakeBoard(withIndex=False, n_row=3, n_column=3):
-    """
-    What is done:
-        1. Making a temporary list as the main-board list
-        2. With rowIndex as the multiplicant we can change the index numbers
-        3. Appending a list three times in the main list:
-            1. This list will contain the indexes if the indexes is required which is acquired by multiplicant rowIndex
-            2. If the indexing is not required then the space will be empty
-        4. Increasing the rowIndex each itration so that the gap between each row will be of the number of rows
-        5. Returning the main-board list
-    """
-    # ? Main-board list
-    t_list = []
-
-    # * rowIndex will help in indexing between the rows
-    rowIndex = 1
-
-    # @ Since we need three rows the iteration will loop three times
-    for _ in range(n_row):
-
-        # @ This will make a list if the indexing is required else we will continue with the empty cells
-        cells = [
-            f'{index + rowIndex}' if withIndex else ' ' for index in range(n_column)]
-
-        # ? Appending the above formed list
-        t_list.append(cells)
-        rowIndex += n_column
-
-    # ? Returing the list
-    return t_list
-
-
-def PrintBoard(boardObj=MakeBoard()):
-    """
-    What is done:
-        1. We are looping the 2D list
-        2. Using so decorators we are beautifing the content
-        3. We are ending empty so that the row will be same line
-        4. Thus we are doing an empty print to break the line
-    """
-
-    for boxRow in boardObj:
-        print('\t', end=' ')
-        for value in boxRow:
-            print(f'[{value}]', end=' ')
-        print('')
-
-
-def ChangeCell(boardObj, rowindex=0, columnindex=0, turn=' ', coordinate=()):
-    """
-    What is done:
-        1. The rowindex and columnindex can used seperately if need we just need to decrease the value by 1 to get the correct numeration
-        2. Other than the above method we can still use the coordinates to directly give the coordinate through the get coordinates method
-        3. The coordinates are seperated to the rowindex and columnindex for simplicity
-        4. The cell value is the removed value as we will add value there
-        5. As a precation we will not remove the value is a value is already present
-            ** We are not remove but we are re-adding the value obtained through the pop
-        6. If the cell is empty then we will be add the turn value which can be either
-            ** {'X'} or {'O'}
-        7. For further precaution we will be returning an bool to cofirm the status of cell change if the cell is not changed then the turn must not be taken
-    """
-    # ? Modificing the rowindex and columnindex to be compatable
-    rowindex = int(coordinate[0] if coordinate else rowindex) - 1
-    columnindex = int(coordinate[1] if coordinate else columnindex) - 1
-
-    # ? Obtaining and removing the cell which is to be change
-    cellvalue = boardObj[rowindex].pop(columnindex)
-
-    # * If the cell had some value in it then it must be corrected
-    if cellvalue != ' ':
-        boardObj[rowindex].insert(columnindex, cellvalue)
-        return False
-    # * Otherwise we can change the cell according to the turn
-    else:
-        boardObj[rowindex].insert(columnindex, turn)
-        return True
-
-
-def GetCoordinates(cellIndex):
-    """
-    What is done:
-        1. Making and indexed board using the MakeBoard() method => This will return a board which has index values in it which represents its coordinates
-        2. Looping through the 2D board:
-            1. Storing the indexes of both row and the column number
-            2. If the cell value of the indexed board matches the index asked then the coordinates will be returned
-            3. Returning the tuple coordinates
-    """
-    # ? Reference indexed board
-    indexedBoard = MakeBoard(True)
-
-    # * This is a 2D loop Which is looping through the Indexed-Board
-    for rowIndex, boxRow in enumerate(indexedBoard):
-        for columnIndex, value in enumerate(boxRow):
-            # * Checking if the values of the cell (index) if equal to the asked index
-            if value == str(cellIndex):
-                return (rowIndex + 1, columnIndex + 1)
-
-
 def Won(boardObj):
     """
     What is done:
@@ -252,8 +154,8 @@ def OneGame(boardObj):
 
 def FullGame(score=[0, 0]):
     """
-    What is done: 
-        1. We wil running this loop forever meaning we can play the game as much as we want 
+    What is done:
+        1. We wil running this loop forever meaning we can play the game as much as we want
         2. Main loop:
             1. Playing a game using the OneGame() method
             2. And storing the winners name
@@ -330,7 +232,8 @@ def SwitchTurn(turn): return 'X' if turn == 'O' else 'O'
 
 
 if __name__ == "__main__":
-    # board = MakeBoard()
+    board = MakeBoard()
+    print(board)
     # ChangeCell(board, 1, 1, 'x')
     # ChangeCell(board, 2, 2, 'o')
     # ChangeCell(board, 3, 3, 'x')
@@ -341,4 +244,4 @@ if __name__ == "__main__":
 
     # print(Won(board))
 
-    FullGame()
+    pass
