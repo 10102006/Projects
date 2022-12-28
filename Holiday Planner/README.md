@@ -1,19 +1,20 @@
+# Holiday Planner
+
 TODO Complete This shit
 
 ## Data Handler
-<p>
-    This python file handles how the State object is interpret in form of a class, which can be converted in simpler format __dict__, latter.
-</p>
+
+This python file handles how the State object is interpret in form of a class, which can be converted in simpler format `__dict__`, latter.
 
 * STATE:
-  * AddTouristPlace()
-  * GetState()
+  * `AddTouristPlace()`
+  * `GetState()`
 * TOURISTPLACE
-  * MakeHotels()
-  * AddTransport()
+  * `MakeHotels()`
+  * `AddTransport()`
 
-### Implementation
-~~~ python
+``` python
+
   cg = dh.STATE(
       "Chhattisgarh",
       "A relative backwards state of India has a great potential for providing human resource.",
@@ -29,4 +30,23 @@ TODO Complete This shit
   [cg.AddTouristPlace(touristPlace) for touristPlace in tps]
 
   print(json.dumps(cg.GetState(), indent=2))
-~~~
+
+```
+
+---
+
+## OSHandler
+
+Currently only able to make folders for each state in the databse and adding the tourist place as a json file.
+
+* Dump
+  * `Activate`
+  * `InitialiseStates`
+  * `InitialiseTouristPlaces`
+
+``` python
+
+  dump = DUMP(database)
+  dump.Activate()
+
+```

@@ -2,6 +2,7 @@
 **/__pycache__/*.pyc
 *.json
 *.pyc
+Database
 projects/Lib/site-packages/numpy/__config__.py
 projects/Lib/site-packages/numpy/__init__.cython-30.pxd
 projects/Lib/site-packages/numpy/__init__.pxd
@@ -869,3 +870,4 @@ projects/Lib/site-packages/numpy-1.23.5.dist-info/top_level.txt
 projects/Lib/site-packages/numpy-1.23.5.dist-info/WHEEL
 projects/Scripts/f2py.exe
 Holiday Planner/tempCodeRunnerFile.py
+Holiday Planner/Database/tp

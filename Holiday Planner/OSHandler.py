@@ -1,125 +1,69 @@
 """
-STATUS:
-OVERVIEW:
+STATUS: Working
+
+OVERVIEW: For backup the datbase of Holiday Planner
+
 IMPROVEMENTS:
-Workings:
-
-STATE: /fdr
-{
-    - TOURIST PLACES: /fdr
-    {
-        CITY: /fdr
-        {
-            HOTELS: /fdr
-            {
-                HOTELS: File containing hotel details
-            }
-            DETAILS: About the city.
-            TRANSPORTS: List of transports avail
-        }
-    }
-    - DETAILS: Explains the state.
-}
-
+    - TODO Add sq database
+    - Add Decorators -> too many chdir
+    - Add more Safe Checks
 
 """
 
 # @ Imports
 import os
-from os import path, scandir, chdir
+from os import path, chdir
 from os.path import join
 import json
 
-import DataHandler as dh
-
-root = r"E:\Coding\Projects\Holiday Planner\Database"
-
 # * Defining
+
 class DUMP:
     """
     Handler for making a folder tree of State object
     """
 
-    def __init__(self, root=""):
-        self.root = path.join(root)
-        os.chdir(self.root)
-
-    def State(self, State):
+    def __init__(self, database):
         """
-        Generates folders operates other functions of class.
+        Initialise rootdir and database
         """
-        os.makedirs(f"{State['Name']}/TouristPlaces", exist_ok=True)
-        chdir(f"./{State['Name']}")
-        with open("Details.txt", "w") as file:
-            file.write(State["Details"])
+        self.rootdir = r"E:\Coding\Projects\Holiday Planner\Database"
+        chdir(self.rootdir)
 
-        for touristPlace in State.get("TouristPlaces"):
-            chdir(join(self.root, f"{State['Name']}/TouristPlaces"))
-            self.TouristPlace(touristPlace)
+        self.database = database
 
-            chdir(f"./Hotels")
-            [self.Hotel(hotel) for hotel in touristPlace["Hotels"]]
-
-    def TouristPlace(self, place):
+    def Activate(self):
         """
-        Generates folders and files of tourist place dict.
+        Command to make backup.
         """
-        name, details, _, transports = place.values()
+        self.InitialiseStates()
 
-        os.makedirs(f"{name}//Hotels")
-        chdir(join(name))
-
-        for item in place:
-            text = ""
-            if item == "Details" or item == "Transports":
-                match item:
-                    case "Details":
-                        text = details
-                    case "Transports":
-                        text = "\n".join(transports)
-
-                with open(f"{item}.txt", "w") as file:
-                    file.write(text)
-
-    def Hotel(self, hotel):
+    def InitialiseStates(self):
         """
-        Generates a hotel file containing its details
+        Making State fldrs and Detail files
         """
-        name, rating, price = hotel
+        for state in self.database:
+            chdir(self.rootdir)
+            statedir = join(self.rootdir, state["Name"])
 
-        with open(f"{name}.txt", "w") as hotel:
-            hotel.write(f"{name} has a good rating of {rating}" + "\n")
-            hotel.write(f"{name}'s price of stay is {price}/night" + "\n")
+            if not path.exists(statedir):
+                os.mkdir(state['Name'])
+                chdir(statedir)
 
+                with open("Details", "x") as file:
+                    file.write(state['Details'])
+            else:
+                os.chdir(statedir)
 
-class SQLHandler:
-    pass
+            self.InitialiseTouristPlace(state)
 
+    def InitialiseTouristPlace(self, state):
+        """
+        Making a json file form tourist-place
+        """
+        for touristPlace in state['TouristPlaces']:
+            os.chdir(join(self.rootdir, state['Name']))
 
-# ? Implementation
-if __name__ == "__main__":
-    cg = dh.STATE(
-        "Chhattisgarh",
-        "A relative backwards state of India has a great potential for providing human resource.",
-    )
+            with open(touristPlace['Name'], "w") as file:
+                json.dump(touristPlace, file, indent=2)
 
-    tps = []
-    for i in range(3):
-        tp = dh.TOURISTPLACE(f"Tourist Place-{i + 1}", "lorem ipsum dore")
-        [
-            tp.AddTransport(transport)
-            for transport in ["car", "train", "airplane", "ship"]
-        ]
-        [
-            tp.MakeHotels(f"{f + 1} Hotel", (f + 1) * 2, (f + 1) * 320)
-            for (f) in range(3)
-        ]
-
-        tps.append(tp)
-
-    [cg.AddTouristPlace(touristPlace) for touristPlace in tps]
-
-    print(json.dumps(cg.GetState(), indent=2))
-
-    dump = DUMP(root)
-    dump.State(cg.GetState())

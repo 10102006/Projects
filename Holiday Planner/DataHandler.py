@@ -5,7 +5,7 @@ OVERVIEW: JSON format handler of State
 
 IMPROVEMENTS:
     - Find out about classes
-    - Make it SQL functional
+
 """
 
 
@@ -17,7 +17,7 @@ class STATE:
 
     def __init__(self, name="", details=""):
         """
-        So this functions makes a class a constructor
+        Initialisign Name, Details and Empty TouristPlaces.0
         """
         self.Name = name if name else input("Enter the State name: ")
         self.Details = details if details else input("Enter the State details: ")
@@ -33,7 +33,7 @@ class STATE:
 
     def GetState(self):
         """
-        Returning a JSON format state
+        Returning in Dictionary Format
         """
         return self.__dict__
 
@@ -41,14 +41,10 @@ class STATE:
 class TOURISTPLACE:
     def __init__(self, name="", details=""):
         """
-        So this functions makes a class a constructor
+        Initialising Name, Details, Hotels(empty) and Transports(empty)
         """
         self.Name = name if name else input("Enter name of the Tourist Place: ")
-        self.Details = (
-            details
-            if details
-            else input("Enter details of the Tourist Place: ")
-        )
+        self.Details =details if details else input("Enter details of the Tourist Place: ")
 
         self.Hotels = []
         self.Transports = []
@@ -68,8 +64,14 @@ class TOURISTPLACE:
                     input("Enter the rating of the Hotel: "),
                     input("Enter the price of stay at the hotel: "),
                 )
-                self.Hotels.append(hotel)
+                self.AddHotel(hotel)
                 print("-----------------------------------------")
+
+    def AddHotel(self, hotel):
+        """
+        Add hotel to the list
+        """
+        self.Hotels.append(hotel)
 
     def AddTransport(self, transport):
         """
