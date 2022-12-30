@@ -18,7 +18,8 @@ import json
 
 # * Defining
 
-class DUMP:
+
+class Dumper:
     """
     Handler for making a folder tree of State object
     """
@@ -30,7 +31,7 @@ class DUMP:
         self.rootdir = r"E:\Coding\Projects\Holiday Planner\Database"
         chdir(self.rootdir)
 
-        self.database = database
+        self.database = [state.GetState() for state in database]
 
     def Activate(self):
         """
@@ -50,8 +51,8 @@ class DUMP:
                 os.mkdir(state['Name'])
                 chdir(statedir)
 
-                with open("Details", "x") as file:
-                    file.write(state['Details'])
+                with open("Description", "x") as file:
+                    file.write(state['Description'])
             else:
                 os.chdir(statedir)
 
@@ -66,4 +67,3 @@ class DUMP:
 
             with open(touristPlace['Name'], "w") as file:
                 json.dump(touristPlace, file, indent=2)
-

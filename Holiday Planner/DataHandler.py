@@ -10,71 +10,111 @@ IMPROVEMENTS:
 
 
 # * Defining
-class STATE:
+class State:
     """
     Handles the State related function also works as a complier
     """
 
-    def __init__(self, name="", details=""):
+    def __init__(self, name, description, touristPlaces):
         """
         Initialisign Name, Details and Empty TouristPlaces.0
         """
-        self.Name = name if name else input("Enter the State name: ")
-        self.Details = details if details else input("Enter the State details: ")
+        self.Name = name
+        self.Description = description
+        self.TouristPlaces = touristPlaces
 
-        self.TouristPlaces = []
+    @classmethod
+    def Create(cls):
+        """
+        CLI for making a State
+        """
+        Name = input("Enter State Name: ")
+        Description = input("Enter State Description: ")
+        TouristPlaces = []
+
+        for _ in range(int(input("How many Tourist Places to Create: "))):
+            TouristPlaces.append(TouristPlace.Create())
+
+        return cls(Name, Description, TouristPlaces)
 
     def AddTouristPlace(self, touristPlace):
         """
         This will append the touristPlace to the state
         and then add the state object will be added to the main dict with the name given
         """
-        self.TouristPlaces.append(touristPlace.__dict__)
+        self.TouristPlaces.append(touristPlace)
 
     def GetState(self):
         """
         Returning in Dictionary Format
         """
-        return self.__dict__
+        State = self.__dict__
+        State['TouristPlaces'] = [touristPlace.__dict__ for touristPlace in State['TouristPlaces']]
+        return State
 
 
-class TOURISTPLACE:
-    def __init__(self, name="", details=""):
+class TouristPlace:
+    def __init__(self, name, description, hotels, transports):
         """
-        Initialising Name, Details, Hotels(empty) and Transports(empty)
+        Initialising Name, Details, Hotels and Transports
         """
-        self.Name = name if name else input("Enter name of the Tourist Place: ")
-        self.Details =details if details else input("Enter details of the Tourist Place: ")
+        self.Name = name
+        self.Description = description
+        self.Hotels = hotels
+        self.Transports = transports
 
-        self.Hotels = []
-        self.Transports = []
+    @classmethod
+    def Create(cls):
+        """
+        CLI for creating a Tourist Place
+        """
+        Name = input('Enter Name of the Tourist Place: ')
+        Description = input('Enter Description of the Tourist Place: ')
+        Hotels = []
+        Transports = []
 
-    def MakeHotels(self, name=None, rating=None, price=None):
-        """
-        CLI snippet for making hotels objects
-        """
-        if price != None:
+        for _ in range(int(input('How many hotels to add: '))):
+            name = input('Hotel name: ')
+            rating = int(input('Hotel rating(number): '))
+            price = int(input('Hotel price(number): '))
+
             hotel = (name, rating, price)
-            self.Hotels.append(hotel)
+            Hotels.append(hotel)
 
-        else:
-            for _ in range(int(input("How many hotels would your like to make: "))):
-                hotel = (
-                    input("Enter the name of the Hotel: "),
-                    input("Enter the rating of the Hotel: "),
-                    input("Enter the price of stay at the hotel: "),
-                )
-                self.AddHotel(hotel)
-                print("-----------------------------------------")
+        for _ in range(int(input('How many transports to add: '))):
+            name = input('Transport name: ')
+            price = int(input('Transport price(number): '))
 
-    def AddHotel(self, hotel):
+            transport = (name, price)
+            Transports.append(transport)
+
+        return cls(Name, Description, Hotels, Transports)
+
+    def AddHotel(self, hotel=tuple):
         """
-        Add hotel to the list
+        Add hotel to the database
         """
         self.Hotels.append(hotel)
 
-    def AddTransport(self, transport):
+    def AddTransport(self, transport=tuple):
         """
-        List of transportation available.
+        Adding transport the database
         """
         self.Transports.append(transport)
+
+
+touristPlaces = [
+TouristPlace(
+    'yo' * i,
+    'ha'*i*3,
+    [
+    ('a', 1, 12), ('b', 5, 12345)
+    ],
+    [
+    ('as', 45), ('qw', 78)
+    ]
+) for i in range(3)
+]
+
+cg = State('CG', 'LOL', touristPlaces)
+print(cg.GetState())
