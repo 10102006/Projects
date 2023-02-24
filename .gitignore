@@ -1,4 +1,5 @@
 **/Database/*.json
+**/Database
 **/__pycache__/*.pyc
 *.json
 *.pyc
