@@ -1,19 +1,15 @@
 """
-STATUS:
-OVERVIEW:
-IMPROVEMENTS:
-Workings:
+STATUS: Working
+OVERVIEW: Basic Pickle functioning
 """
 
 # @ Imports
 import pickle
 from pathlib import Path
-from flow import f
 
 PATH = Path.cwd() / 'Database'
 
 # * Defining
-
 
 def saveSchedule(scheduleName, flow):
     try:
@@ -29,9 +25,3 @@ def retrieveSchedule(scheduleName):
             return (pickle.load(file))
     except Exception as e:
         print(e)
-
-
-# ? Implementation
-if __name__ == "__main__":
-    print(retrieveSchedule('my schedule'))
-    # (saveSchedule('my schedule', f))
