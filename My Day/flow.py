@@ -16,7 +16,7 @@ pp = pprint.PrettyPrinter(indent=4, width=1).pprint
 
 
 def setTime(hour, minute=0):
-    return time(hour, minute).strftime('%H.2f:%M.2f')
+    return time(hour, minute).strftime('%H:%M')
 
 
 class Flow():
