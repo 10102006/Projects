@@ -8,18 +8,23 @@ IMPROVEMENTS:
 """
 
 # @ Imports
+from datetime import time
 import pprint
 pp = pprint.PrettyPrinter(indent=4, width=1).pprint
 
 # * Defining
 
 
+def setTime(hour, minute=0):
+    return time(hour, minute).strftime('%H.2f:%M.2f')
+
+
 class Flow():
     def __init__(self, events):
         self.flow = {
-            ('wake up', '05:00'): [],
-            ('study', '16:00'): [],
-            ('sleep', '23:00'): []
+            ('wake up', setTime(5)): [],
+            ('study', setTime(16)): [],
+            ('sleep', setTime(23)): []
         }
         self.events = list(events)
 
@@ -87,6 +92,6 @@ evnts = [
     Event('draw', 'jornal')
 ]
 
-if __name__ == "__main__":
-    f = Flow(evnts)
-    pp(f.flow)
+# if __name__ == "__main__":
+f = Flow(evnts)
+# pp(f.flow)
