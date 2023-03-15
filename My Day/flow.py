@@ -35,9 +35,18 @@ class Flow():
         if events:
             self.events = events
 
-        self.initialise()
-        self.append()
-        self.reiterate()
+        for _ in self.events:
+            self.initialise()
+            self.append()
+            self.reiterate()
+
+    def initialise(self):
+        """ """
+        for keyAnchor in (self.flow):
+            for event in (self.events):
+                if event.anchor == keyAnchor[0]:
+                    self.flow[keyAnchor].append(event)
+                    self.events.remove(event)
 
     def append(self):
         """ """
@@ -57,19 +66,12 @@ class Flow():
 
             counter += 1
 
-    def initialise(self):
-        """ """
-        for keyAnchor in (self.flow):
-            for event in (self.events):
-                if event.anchor == keyAnchor[0]:
-                    self.flow[keyAnchor].append(event)
-                    self.events.remove(event)
-
     def reiterate(self):
         """ """
         for event in self.events:
             if ':' in event.anchor:
                 self.flow[('', event.anchor)] = [event]
+                self.events.remove(event)
 
 
 class Event():
@@ -86,12 +88,17 @@ class Event():
 evnts = [
     Event('exercise', 'wake up'),
     Event('draw', 'exercise'),
-    Event('brush', '22:00'),
+
     Event('code', 'study'),
+
+    Event('brush', '22:00'),
     Event('jornal', 'brush'),
     Event('draw', 'jornal')
 ]
 
-# if __name__ == "__main__":
 f = Flow(evnts)
-# pp(f.flow)
+# for event in f.flow:
+#     print(event)
+#     pp(f.flow[event])
+#     print('-----------------------------------------')
+

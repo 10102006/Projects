@@ -1,9 +1,11 @@
 """
 STATUS: Working
-OVERVIEW: Gives suggestion to the user on based on the flow
+OVERVIEW: Gives suggestion to the user on based on the flow.\n
 IMPROVEMENTS:
     - Make better suggestions
     - improve `getChunk`
+"""
+"""
 Workings:
 # ? Implementation
 if __name__ == "__main__":

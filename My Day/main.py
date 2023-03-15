@@ -1,82 +1,154 @@
 
 """
-STATUS: Wokring(not fully)
+STATUS: Wokring
 OVERVIEW: Is the control unit of the program
 IMPROVEMENTS:
-Workings:
-    - Incomplete
+    - make a seprate argparse file
+WORKINGS:
+    - Implement multiple system
+    - Add suggestions
 """
 
 # @ Imports
+import datetime
 import argparse
 import flow
 import suggestions
 import database
-import pprint
-pp = pprint.PrettyPrinter(indent=3).pprint
 
 # * Defining
-# parser = argparse.ArgumentParser(description='Helpful tool for scheduling and managing ones day.')
+TIME = datetime.time(hour=15).strftime("%H:%M")
+SCHEDULENAME = 'schedule'
+SCHEDULE = database.retrieveSchedule(SCHEDULENAME)
 
-# parser.add_argument('command', type=str, help='what to do?')
-# args = parser.parse_args()
+# * Argparse
+PARSER = argparse.ArgumentParser(
+    description='Helpful tool for scheduling and managing ones day.')
 
-scheduleName = 'my schedule'
-scheduleFlow = database.retrieveSchedule(scheduleName)
+PARSER.add_argument('command', type=str,
+                    help='available commands: show, add, change', choices=['show', 'add', 'change'])
+PARSER.add_argument('-data', '-d', type=str,
+                    help='available input: habit and KA', choices=['habit', 'key anchor'])
+PARSER.add_argument('-multiple', '-m', action='store_true')
 
-
-def Show():
-    """ """
-    schedule = scheduleFlow.flow
-
-    def keyTime(keyAnchor):
-        return suggestions.getTime(keyAnchor[1])
-
-    keyAnchors = sorted(schedule.keys(), key=keyTime)
-
-    for keyAnchor in keyAnchors:
-        print(f"/* {keyAnchor[0]} at {keyAnchor[1]}")
-        for event in schedule[keyAnchor]:
-            print(f"\t/ {event.name} after {event.anchor}")
+args = PARSER.parse_args()
 
 
-def AddEvent(scheduleFlow):
-    print('--- Defined Habits ---')
-    eventName = input("Enter new habit name: ")
-    eventAnchor = input('Enter new Anchor: ')
+class MyDay:
+    def __init__(self):
+        self.scheduleFlow = SCHEDULE.flow
+        self.keyAnchors = self.get_keyAnchors()
 
-    event = flow.Event(eventName, eventAnchor)
+    def get_keyAnchors(self):
+        """ returna a sorted list of the `keyAnchors`. """
+        return sorted(self.scheduleFlow.keys(
+        ), key=lambda keyAnchor: suggestions.getTime(keyAnchor[1]))
 
-    scheduleFlow.events.append(event)
-    scheduleFlow.sync()
+    def show(self):
+        """ prints the `flow` in a hierachy. """
+        for name, time in self.get_keyAnchors():
+            print("/*", name,  'at', time)
+
+            keyAnchor = (name, time)
+            for event in self.scheduleFlow[keyAnchor]:
+                print(f"\t/ {event.name} after {event.anchor}")
+
+    def save(self):
+        try:
+            database.saveSchedule(SCHEDULENAME, SCHEDULE)
+        except Exception as e:
+            print(e)
+
+    @staticmethod
+    def promptTo(function, data):
+        """ """
+        title = 'Adding' if function == 'add' else 'Changing'
+        descriptor = 'anchor' if data == 'habit' else 'time'
+
+        print(f"--- {title} {data.capitalize()} ---")
+
+        _firstPrompt = input(f'Enter name of the {data} : ')
+        _secondPrompt = input(
+            f'Enter the {descriptor}: ')
+
+        return _firstPrompt, _secondPrompt
 
 
-def SaveChanges():
-    database.saveSchedule(scheduleName, scheduleFlow)
+class Add(MyDay):
+    @staticmethod
+    def event():
+        name, anchor = MyDay.promptTo('add', 'habit')
+
+        try:
+            event = flow.Event(name, anchor)
+
+            SCHEDULE.events.append(event)
+            SCHEDULE.sync()
+        except Exception:
+            print("Wrong Input!")
+
+    @staticmethod
+    def keyAnchor():
+        name, time = MyDay.promptTo('add', 'key anchor')
+        time = '{:02d}:{:02d}'.format(
+            *[int(value) for value in time.split(':')])
+
+        try:
+            SCHEDULE.flow[(name, time)] = []
+            SCHEDULE.sync()
+        except Exception:
+            print("Wrong Input!")
 
 
-def ChangeKeyAnchor(scheduleFlow):
-    """ """
-    print(f'--- Mandatory Events ---')
-    keyAnchor = [_keyAnchor for _keyAnchor in scheduleFlow.flow.keys()
-                 if _keyAnchor[0]][2]
-    # for keyAnchor in scheduleFlow.flow.keys():
-    newTime = input(f'when to {keyAnchor[0]}(previous: {keyAnchor[1]}): ')
-    newTime = '{:02d}:{:02d}'.format(*[int(s) for s in newTime.split(':')])
+class Change(MyDay):
+    @staticmethod
+    def event():
+        name, anchor = MyDay.promptTo('change', 'habit')
 
-    scheduleFlow.flow.update(
-        {(keyAnchor[0], newTime): scheduleFlow.flow[keyAnchor]})
-    scheduleFlow.flow.pop(keyAnchor)
+        try:
+            for event in SCHEDULE.events:
+                if event.name == name:
+                    event.anchor = anchor
+        except Exception as e:
+            print("Given habit doesn't exist!")
+
+    @staticmethod
+    def keyAnchor():
+        name, time = MyDay.promptTo('change', 'key anchor')
+        time = '{:02d}:{:02d}'.format(
+            *[int(value) for value in time.split(':')])
+
+        for _anchorName, _time in SCHEDULE.flow.keys():
+            if _anchorName == name:
+                anchor = (_anchorName, _time)
+
+        try:
+            SCHEDULE.flow[(name, time)] = SCHEDULE.flow[anchor]
+            SCHEDULE.flow.pop(anchor)
+
+            SCHEDULE.sync()
+        except Exception:
+            print("Given Key Anchor doesn't exist!")
 
 
 # ? Implementation
-
 if __name__ == "__main__":
-    ChangeKeyAnchor(scheduleFlow)
-    Show()
+    main = MyDay()
 
-    s = suggestions.Suggesttion('18:30', scheduleFlow.flow)
-    s.suggest()
+    if args.command == 'show':
+        main.show()
+        quit()
 
-# if args.command == 'show':
-    #    print('Hello World!')
+    try:
+        func = Add if args.command == 'add' else Change
+        if args.data == 'habit':
+            func.event()
+        elif args.data == 'key anchor':
+            func.keyAnchor()
+        else:
+            raise Exception('INCOMPLETE PROMPT: enter data to alter using (-d)')
+
+        main.save()
+    except Exception as e:
+        print(e)
+
