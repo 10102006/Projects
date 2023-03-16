@@ -15,7 +15,7 @@ PARSER = argparse.ArgumentParser(
     description='Helpful tool for scheduling and managing ones day.')
 
 PARSER.add_argument('command', type=str,
-                    help='available commands: show, add, change', choices=['show', 'add', 'change'])
+                    help='available commands: show, add, change', choices=['show', 'add', 'change', 'suggest'])
 PARSER.add_argument('-data', '-d', type=str,
                     help='available input: habit and KA', choices=['habit', 'key anchor'])
 PARSER.add_argument('-multiple', '-m', action='store_true')
@@ -28,6 +28,10 @@ if __name__ == "__main__":
 
     if args.command == 'show':
         main.show()
+        quit()
+
+    elif args.command == 'suggest':
+        main.suggest()
         quit()
 
     try:

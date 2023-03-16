@@ -5,33 +5,21 @@ OVERVIEW: Is the control unit of the program
 IMPROVEMENTS:
     - make a seprate argparse file
 WORKINGS:
-    - Implement multiple system
     - Add suggestions
 """
 
 # @ Imports
 import datetime
-import argparse
 import flow
-import suggestions
+from flow import getTime
+from suggestions import Suggestion
 import database
 
 # * Defining
-TIME = datetime.time(hour=15).strftime("%H:%M")
+TIME = datetime.datetime.now().strftime("%H:%M")
 SCHEDULENAME = 'schedule'
 SCHEDULE = database.retrieveSchedule(SCHEDULENAME)
 
-# * Argparse
-PARSER = argparse.ArgumentParser(
-    description='Helpful tool for scheduling and managing ones day.')
-
-PARSER.add_argument('command', type=str,
-                    help='available commands: show, add, change', choices=['show', 'add', 'change'])
-PARSER.add_argument('-data', '-d', type=str,
-                    help='available input: habit and KA', choices=['habit', 'key anchor'])
-PARSER.add_argument('-multiple', '-m', action='store_true')
-
-args = PARSER.parse_args()
 
 
 class MyDay:
@@ -42,7 +30,7 @@ class MyDay:
     def get_keyAnchors(self):
         """ returna a sorted list of the `keyAnchors`. """
         return sorted(self.scheduleFlow.keys(
-        ), key=lambda keyAnchor: suggestions.getTime(keyAnchor[1]))
+        ), key=lambda keyAnchor: getTime(keyAnchor[1]))
 
     def show(self):
         """ prints the `flow` in a hierachy. """
@@ -52,6 +40,11 @@ class MyDay:
             keyAnchor = (name, time)
             for event in self.scheduleFlow[keyAnchor]:
                 print(f"\t/ {event.name} after {event.anchor}")
+
+    def suggest(self):
+        """ """
+        suggestion = Suggestion(TIME, SCHEDULE.flow)
+        suggestion.session()
 
     def save(self):
         try:
@@ -129,26 +122,3 @@ class Change(MyDay):
             SCHEDULE.sync()
         except Exception:
             print("Given Key Anchor doesn't exist!")
-
-
-# ? Implementation
-if __name__ == "__main__":
-    main = MyDay()
-
-    if args.command == 'show':
-        main.show()
-        quit()
-
-    try:
-        func = Add if args.command == 'add' else Change
-        if args.data == 'habit':
-            func.event()
-        elif args.data == 'key anchor':
-            func.keyAnchor()
-        else:
-            raise Exception('INCOMPLETE PROMPT: enter data to alter using (-d)')
-
-        main.save()
-    except Exception as e:
-        print(e)
-

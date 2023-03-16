@@ -17,56 +17,57 @@ if __name__ == "__main__":
 
 # @ Imports
 from datetime import datetime
-from flow import f, setTime
+from flow import setTime, getTime, match
 import pprint
-
 pp = pprint.PrettyPrinter(indent=3).pprint
+
 # * Defining
 
 
-def getTime(strTime):
-    return datetime.strptime(strTime, '%H:%M')
-
-
-def match(time, flow):
-    """ """
-    for keyAnchor in flow:
-        if time == keyAnchor[1]:
-            return keyAnchor
-
-
-class Suggesttion:
+class Suggestion:
     def __init__(self, time, flow):
         self.flow = flow
-        self.cTime = time
+        self.currentTime = getTime(time)
+        self.timeFlow = sorted([getTime(strTime)
+                                for _, strTime in self.flow.keys()])
 
-    def getChunk(self):
+    def session(self):
+        """Full interactive session"""
+        check = True
+        for i, time in enumerate(self.timeFlow, start=1):
+            if check and self.currentTime > self.timeFlow[i]:
+                continue
+
+            check = False
+            keyAnchor = match(setTime(time.hour, time.minute), self.flow)
+            if self.suggest(keyAnchor):
+                break
+        else:
+            print('Welp! Your Scheudle ends here!\n Goodbye!!')
+
+    def suggest(self, keyAnchor):
         """ """
-        fTime = ''
-        timeFlow = sorted([getTime(strTime)
-                          for _, strTime in self.flow.keys()])
+        name, time = keyAnchor
+        eventsCycle = self.flow[keyAnchor]
 
-        for time in timeFlow:
-            if getTime(self.cTime) > time:
-                fTime = setTime(time.hour, time.minute)
+        print(
+            f"At {time}, you did {name}:\n" if name else f"At {time}:")
 
-        return match(fTime, self.flow)
-
-    def suggest(self):
-        """ """
-        keyAnchor = self.getChunk()
-        events = self.flow[keyAnchor]
-
-        print(f"Lastly at {keyAnchor[1]}, your Keystone Habit is {keyAnchor[0]}:\n")
-        for event in events:
+        for event in eventsCycle:
             speech = f"Have you done {event.name}?"
             reply = input(f'{speech} (y/n): ').capitalize()
+
             if reply == 'N':
-                print('All the best then!')
+                print('-----------------------------------------')
+                print(f'All the best with {event.name}!')
                 return True
         else:
-            print("Okay! Let's move one!")
+            print('-----------------------------------------')
             return False
 
 
-
+if __name__ == '__main__':
+    from database import retrieveSchedule
+    f = retrieveSchedule(('schedule')).flow
+    s = Suggestion('13:45', f)
+    s.session()
