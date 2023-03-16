@@ -1,9 +1,6 @@
 """
 STATUS: Working
 OVERVIEW: Gives suggestion to the user on based on the flow.\n
-IMPROVEMENTS:
-    - Make better suggestions
-    - improve `getChunk`
 """
 """
 Workings:

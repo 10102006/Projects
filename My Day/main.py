@@ -4,8 +4,6 @@ STATUS: Wokring
 OVERVIEW: Is the control unit of the program
 IMPROVEMENTS:
     - make a seprate argparse file
-WORKINGS:
-    - Add suggestions
 """
 
 # @ Imports

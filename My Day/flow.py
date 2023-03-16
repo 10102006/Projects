@@ -4,7 +4,7 @@ OVERVIEW: controls the flow of the events happening
 IMPROVEMENTS:
     - better `append()`
     - make it more streamlined, meaning not broken but to work as a single unit
-    - implement preiod system
+    - implement period system
 """
 
 # @ Imports
