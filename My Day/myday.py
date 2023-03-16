@@ -1,8 +1,6 @@
 """
-STATUS:
-OVERVIEW:
-IMPROVEMENTS:
-Workings:
+STATUS: Working
+OVERVIEW: The CLI
 """
 
 # @ Imports
