@@ -8,15 +8,26 @@ IMPROVEMENTS:
 """
 
 # @ Imports
-from datetime import time
-import pprint
-pp = pprint.PrettyPrinter(indent=4, width=1).pprint
+from datetime import time, datetime
 
 # * Defining
 
 
 def setTime(hour, minute=0):
+    """returns a `str` obj for given hour and minutes."""
     return time(hour, minute).strftime('%H:%M')
+
+
+def getTime(strTime):
+    """returns a `time` for given str"""
+    return datetime.strptime(strTime, '%H:%M')
+
+
+def match(time, flow):
+    """Get `keyAnchor` of matching time."""
+    for keyAnchor in flow:
+        if time == keyAnchor[1]:
+            return keyAnchor
 
 
 class Flow():
@@ -85,20 +96,22 @@ class Event():
 
 
 # ? Implementation
-evnts = [
-    Event('exercise', 'wake up'),
-    Event('draw', 'exercise'),
+if __name__ == '__main__':
 
-    Event('code', 'study'),
+    evnts = [
+        Event('exercise', 'wake up'),
+        Event('draw', 'exercise'),
 
-    Event('brush', '22:00'),
-    Event('jornal', 'brush'),
-    Event('draw', 'jornal')
-]
+        Event('code', 'study'),
 
-f = Flow(evnts)
+        Event('brush', '22:00'),
+        Event('jornal', 'brush'),
+        Event('draw', 'jornal')
+    ]
+
+    f = Flow(evnts)
+
 # for event in f.flow:
 #     print(event)
 #     pp(f.flow[event])
 #     print('-----------------------------------------')
-
