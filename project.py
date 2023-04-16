@@ -49,8 +49,8 @@ if __name__ == "__main__":
 
 ''',
     'README.md':
-    '''
-# PROJECT NAME
+    '''# PROJECT NAME
+
 [DESCRIPTION]
 
 ## USES
