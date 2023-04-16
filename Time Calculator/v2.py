@@ -1,3 +1,5 @@
+# DOCUMENT.
+
 """
 STATUS: Wokring
 
@@ -21,22 +23,21 @@ def add_time(time, elapsedtime, day=''):
     time = datetime.strptime(f'{time}', r'%I:%M %p')
     elapsedtime = timedelta(hours=elapsedtime[0], minutes=elapsedtime[1])
 
-    newtime = (time + elapsedtime)
-    noOfDays = (newtime.day - time.day)
-    str_newtime = newtime.strftime(r'%I:%M %p')
+    datetime_time = (time + elapsedtime)
+    noOfDays = (datetime_time.day - time.day)
+    str_time = datetime_time.strftime(r'%I:%M %p')
 
-    daysprompt = ''
-    daypromt = ''
+    noOfDaysPrompt = ''
+    weekdayPromt = ''
 
     if day:
-        daypromt = f", {days[(day + newtime.day - time.day)%7]}"
+        weekdayPromt = f", {days[(day + datetime_time.day - time.day)%7]}"
     if noOfDays == 1:
-        daysprompt = f" (next day)"
+        noOfDaysPrompt = f" (next day)"
     elif noOfDays:
-        daysprompt = f" ({noOfDays} days later)"
+        noOfDaysPrompt = f" ({noOfDays} days later)"
 
-    print(f"{str_newtime}{daypromt}{daysprompt}")
-
+    print(f"{str_time}{weekdayPromt}{noOfDaysPrompt}")
 
 
 # ? Implementation
