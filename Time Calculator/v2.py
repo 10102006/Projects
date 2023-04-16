@@ -1,8 +1,7 @@
 """
-STATUS:
-OVERVIEW:
-IMPROVEMENTS:
-Workings:
+STATUS: Wokring
+
+OVERVIEW: Better Time Calculator
 """
 
 # @ Imports
@@ -39,7 +38,7 @@ def add_time(time, elapsedtime, day=''):
     print(f"{str_newtime}{daypromt}{daysprompt}")
 
 
-add_time("11:43 AM", "00:20")
 
 # ? Implementation
-# if __name__ == "__main__":
+if __name__ == "__main__":
+    add_time("11:43 AM", "40:20")
